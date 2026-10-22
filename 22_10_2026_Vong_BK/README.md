@@ -97,7 +97,7 @@ Model TFLite là bộ trích đặc trưng đã được đóng vào firmware. *
 | --- | --- | --- |
 | PA9 TX | GPIO18 RX | TX nối chéo RX |
 | PA10 RX | GPIO17 TX | RX nối chéo TX |
-| GND | GND | GND chung, mức logic 3,3 V |
+| GND | GND | GND chung |
 
 UART chạy **115200 baud, 8N1**. ESP32-S3 còn cần camera USB UVC hỗ trợ **MJPEG 640×480**; firmware được cấu hình cho board có **flash 16 MB và PSRAM octal 8 MB**.
 
