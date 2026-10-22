@@ -1,0 +1,6 @@
+{
+    "idf.currentSetup": "D:\\VSCode\\Espressif\\frameworks\\esp-idf-v5.4.4",
+    "idf.flashType": "UART",
+    "idf.port": "COM5",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json"
+}

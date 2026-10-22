@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "ESP-IDF: Build",
+            "type": "process",
+            "command": "powershell.exe",
+            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/tools/idf-task.ps1", "build"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "problemMatcher": []
+        },
+        {
+            "label": "ESP-IDF: Flash",
+            "type": "process",
+            "command": "powershell.exe",
+            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/tools/idf-task.ps1", "flash", "${config:idf.port}"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "problemMatcher": []
+        },
+        {
+            "label": "ESP-IDF: Monitor",
+            "type": "process",
+            "command": "powershell.exe",
+            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/tools/idf-task.ps1", "monitor", "${config:idf.port}"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "problemMatcher": []
+        },
+        {
+            "label": "ESP-IDF: Build and Flash",
+            "dependsOrder": "sequence",
+            "dependsOn": ["ESP-IDF: Build", "ESP-IDF: Flash"],
+            "problemMatcher": []
+        },
+        {
+            "label": "ESP-IDF: Menuconfig",
+            "type": "process",
+            "command": "powershell.exe",
+            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/tools/idf-task.ps1", "menuconfig"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "problemMatcher": []
+        }
+    ]
+}

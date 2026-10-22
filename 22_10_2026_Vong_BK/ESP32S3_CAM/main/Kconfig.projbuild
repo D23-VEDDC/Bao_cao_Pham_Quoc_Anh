@@ -1,0 +1,86 @@
+menu "VEDC AI Debug"
+
+    config VEDC_AI_CORESET_MAX_BANK
+        int "PatchCore memory bank capacity"
+        range 64 256
+        default 64
+        help
+            Set 64, 128, or 256 to compare memory-bank capacity. Larger banks
+            increase PSRAM use and may increase per-patch nearest-neighbour time.
+
+    config VEDC_AI_PATCH_IO_DEBUG
+        bool "Dump one patch and its raw/L2 embedding vectors to serial"
+        default n
+        help
+            Emits a 12,288-byte RGB patch dump and raw plus L2-normalized
+            32-float embedding for the selected row-major patch index.
+
+    config VEDC_AI_PATCH_DEBUG_INDEX
+        int "Debug patch index (0-116)"
+        range 0 116
+        default 13
+        depends on VEDC_AI_PATCH_IO_DEBUG
+
+    config VEDC_AI_OP_PROFILE
+        bool "Log operator graph, timing and output stats on one real patch"
+        default y
+        help
+            Logs every model operator at boot, then time, output hash and
+            min/max of each operator on one real camera patch per capture.
+            It observes the optimized kernels without changing vector math.
+
+    config VEDC_AI_OP_PROFILE_INDEX
+        int "Patch index for per-operator timing (0-116)"
+        range 0 116
+        default 0
+        depends on VEDC_AI_OP_PROFILE
+
+    config VEDC_FORCE_TFLM_REFERENCE
+        bool "Force TFLite Micro reference kernels (disable ESP-NN)"
+        default n
+        help
+            Disable ESP-NN optimized kernels so Conv2D/Depthwise/FC/etc. use
+            TFLite Micro reference implementations. Use only for A/B validation
+            against Python/reference output; keep disabled in the normal fast build.
+
+endmenu
+
+menu "Example Configuration"
+
+    choice DEVELOPMENT_BOARD_SELECTION
+        prompt "Select the development board you are using"
+        default BOARD_GENERIC
+        help
+            Select this option to choose the board for this example.
+
+        config ESP32_S3_USB_OTG
+            bool "ESP32 S3 USB OTG"
+
+        config BOARD_GENERIC
+            bool "BOARD GENERIC"
+
+    endchoice
+
+    menu "WiFi and server settings"
+        config VEDC_AP_SSID
+            string "ESP32 access point SSID"
+            default "VEDC_ESP32"
+
+        config VEDC_AP_PASSWORD
+            string "ESP32 access point password"
+            default "vedc1234"
+
+        config VEDC_WIFI_SSID
+            string "WiFi SSID"
+            default ""
+
+        config VEDC_WIFI_PASSWORD
+            string "WiFi password"
+            default ""
+
+        config VEDC_SERVER_UPLOAD_URL
+            string "Inspection server upload URL"
+            default ""
+    endmenu
+
+endmenu
