@@ -1,8 +1,8 @@
-# VEDC — hệ thống kiểm tra chất lượng PCB bằng thị giác máy và đo dòng điện
+# VEDC — Hệ thống kiểm tra chất lượng PCB bằng thị giác máy và đo dòng điện
 
 > **Mục tiêu của VEDC:** Xây dựng một trạm kiểm tra PCB bán tự động, có thể đưa bo mạch đến đúng vị trí, kiểm tra lỗi ngoại quan, đo dòng điện và trình bày kết quả rõ ràng cho người vận hành. Hệ thống hướng đến một quy trình kiểm tra nhất quán, dễ quan sát và có thể tiếp tục hiệu chuẩn trên dây chuyền thực tế.
 
-Một PCB đi qua VEDC theo trình tự: **băng chuyền đưa PCB tới vị trí chụp → cảm biến dừng motor → camera và AI kiểm tra bề mặt → PCB đạt ngoại quan được đo dòng → kết quả hiển thị trên TFT và web → băng chuyền nhận PCB tiếp theo**. PCB lỗi ngoại quan được kết luận ngay và bỏ qua bước cấp nguồn đo dòng.
+Một PCB đi qua VEDC theo trình tự: **băng chuyền đưa PCB tới vị trí chụp → cảm biến dừng Motor → Camera và AI kiểm tra bề mặt → PCB đạt ngoại quan được đo dòng → kết quả hiển thị trên TFT và WEB → băng chuyền nhận PCB tiếp theo**. PCB lỗi ngoại quan được kết luận ngay và bỏ qua bước cấp nguồn đo dòng.
 
 ## Hệ thống giải quyết bài toán gì?
 
@@ -46,9 +46,9 @@ Notebook đã tạo được checkpoint và xuất các biến thể TFLite; b�
 
 ```mermaid
 flowchart LR
-    N[Colab: dữ liệu PCB → huấn luyện embedding 32D] -->|Xuất TFLite| M[Model nhúng trong firmware ESP32-S3]
-    B[Nút bấm, LDR, INA219] --> S[STM32F103C8<br/>Điều phối Learn/Check]
-    S -->|UART: lệnh và số đo dòng| E[ESP32-S3<br/>Camera USB + TFLite + Memory Bank]
+    N[Colab: Dữ liệu PCB → Huấn luyện embedding 32D] -->|Xuất TFLite| M[Model nhúng trong firmware ESP32-S3]
+    B[BUTTON, LDR, INA219] --> S[STM32F103C8<br/>Điều phối Learn/Check]
+    S -->|UART: Lệnh và số đo dòng| E[ESP32-S3<br/>Camera USB + TFLite + Memory Bank]
     C[Camera USB UVC] -->|MJPEG 640×480| E
     E -->|UART: ACK, PASS/FAIL, thống kê| S
     S --> H[Motor/L298N, relay, LED, TFT]
@@ -90,8 +90,6 @@ Model TFLite là bộ trích đặc trưng đã được đóng vào firmware. *
 | PB10 / PB11 / PB12 | TFT ST7735 DC / RST / CS | Tín hiệu điều khiển màn hình |
 | PB13 / PB15 | TFT ST7735 SCK / MOSI | SPI2 hiển thị |
 | PA6 / PA8 / PA7 | LED đỏ / vàng / xanh | Trạng thái nguồn / Learn / Check |
-
-Các nút dùng điện trở kéo lên trong STM32, **nhấn = mức thấp**. LDR cấp **3,3 V** theo cấu hình module được mô tả trong firmware. Motor dùng nguồn phù hợp riêng qua L298N; nối **GND chung** giữa STM32, ESP32-S3, L298N và các module liên quan. Không đưa nguồn motor 12 V vào chân PA15.
 
 ### Liên kết STM32 ↔ ESP32-S3
 
@@ -143,7 +141,7 @@ Frame hai chiều có dạng `0xAA | LEN | CMD | DATA | CRC8 | 0x55`. `LEN` là 
 | `0x22 POWER_CHECK[board,Imax,Iavg]` | `0xA2 POWER_RESULT` | Kiểm tra dòng điện |
 | `0x23 CHECK_NEXT[board]` | `0xFF ACK` | Chuyển PCB kế tiếp |
 
-ESP32 dùng `0x94 CMD_ERROR` khi không thể xử lý lệnh. STM32 gửi lại request theo chu kỳ nếu chưa nhận được phản hồi; ESP32 lưu phản hồi của transaction vừa xử lý để request lặp không chụp, train hay tăng số PCB lần thứ hai. ESP32 có thêm lệnh `DELETE_SAMPLE`, nhưng **quy trình STM32 trong bản này chưa gọi lệnh đó**.
+ESP32 dùng `0x94 CMD_ERROR` khi không thể xử lý lệnh. STM32 gửi lại request theo chu kỳ nếu chưa nhận được phản hồi; ESP32 lưu phản hồi của transaction vừa xử lý để request lặp không chụp, train hay tăng số PCB lần thứ hai.
 
 ## Build, nạp và quan sát
 
@@ -151,7 +149,7 @@ ESP32 dùng `0x94 CMD_ERROR` khi không thể xử lý lệnh. STM32 gửi lại
 
 1. Mở [`STM32F102C8T6/MDK/ok.uvprojx`](STM32F102C8T6/MDK/ok.uvprojx) bằng **Keil µVision**.
 2. Build target STM32F103C8, kiểm tra cảnh báo/lỗi và nạp bằng ST-Link qua SWD.
-3. Kiểm tra [`MDK/my_lib/hw_config.h`](STM32F102C8T6/MDK/my_lib/hw_config.h) của **bản lấy từ ZIP gốc** có `CONVEYOR_TARGET_DUTY 83U` trước khi nạp. Nếu dùng một thư mục giải nén đã chỉnh sửa riêng, giá trị trong đó có thể khác.
+3. Kiểm tra [`MDK/my_lib/hw_config.h`](STM32F102C8T6/MDK/my_lib/hw_config.h) có `CONVEYOR_TARGET_DUTY 83U` trước khi nạp.
 
 ### ESP32-S3
 
