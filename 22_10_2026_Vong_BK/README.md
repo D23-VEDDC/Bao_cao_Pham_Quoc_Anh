@@ -2,11 +2,11 @@
 
 > **Mục tiêu của VEDC:** Xây dựng một trạm kiểm tra PCB bán tự động, có thể đưa bo mạch đến đúng vị trí, kiểm tra lỗi ngoại quan, đo dòng điện và trình bày kết quả rõ ràng cho người vận hành. Hệ thống hướng đến một quy trình kiểm tra nhất quán, dễ quan sát và có thể tiếp tục hiệu chuẩn trên dây chuyền thực tế.
 
-Một PCB đi qua VEDC theo trình tự: **băng chuyền đưa PCB tới vị trí chụp → cảm biến dừng Motor → Camera và AI kiểm tra bề mặt → PCB đạt ngoại quan được đo dòng → kết quả hiển thị trên TFT và WEB → băng chuyền nhận PCB tiếp theo**. PCB lỗi ngoại quan được kết luận ngay và bỏ qua bước cấp nguồn đo dòng.
+Một PCB đi qua VEDC theo trình tự: **băng chuyền đưa PCB tới vị trí chụp → cảm biến dừng Motor → Camera và AI kiểm tra bề mặt → PCB đạt ngoại quan được đo dòng → kết quả hiển thị trên TFT và giao diện Web → băng chuyền nhận PCB tiếp theo**. PCB lỗi ngoại quan được kết luận ngay và bỏ qua bước cấp nguồn đo dòng.
 
 ## Hệ thống giải quyết bài toán gì?
 
-Kiểm tra PCB cần quan sát những lỗi nhỏ trên bề mặt, đồng thời xác nhận đặc tính điện của bo mạch sau khi cấp nguồn. VEDC kết hợp hai phép kiểm tra này trong cùng một quy trình do **STM32F103C8** điều phối. **ESP32-S3** nhận ảnh từ camera USB, chạy model AI và so sánh PCB đang kiểm tra với các PCB mẫu đạt chuẩn. Người vận hành theo dõi từng bước trên màn hình TFT và giao diện web.
+Kiểm tra PCB cần quan sát những lỗi nhỏ trên bề mặt, đồng thời xác nhận đặc tính điện của bo mạch sau khi cấp nguồn. VEDC kết hợp hai phép kiểm tra này trong cùng một quy trình do **STM32F103C8** điều phối. **ESP32-S3** nhận ảnh từ camera USB, chạy model AI và so sánh PCB đang kiểm tra với các PCB mẫu đạt chuẩn. Người vận hành theo dõi từng bước trên màn hình TFT và giao diện Web.
 
 Các điểm chính của thiết kế:
 
